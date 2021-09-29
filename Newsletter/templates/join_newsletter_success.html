@@ -1,7 +1,10 @@
 {% extends 'root.html' %}
 
 {% block content %}
-    <h1> Almost done </h1>
-{#    <p> Now please check {{ email }} and confirm join to newsletter </p>#}
-    <p> Now please check {} and confirm join to newsletter </p>
+    {% if not object.confirmed %}
+        <h1> Almost done </h1>
+        <p> Now please check <b>{{ object.email }}</b> and confirm join to newsletter </p>
+    {% else %}
+        <h1> Email is confirmed </h1>
+    {% endif %}
 {% endblock %}

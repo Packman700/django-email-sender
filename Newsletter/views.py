@@ -1,46 +1,32 @@
-from django.views.generic import FormView, TemplateView
-from django.views.generic.base import View
-from django.shortcuts import render
-
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import FormView, DetailView
 from .form import JoinNewsletterForm
-from django.urls import reverse, reverse_lazy
+from .models import Member
+from django.urls import reverse
 
-class JoinNewsletter(View):
+class JoinNewsletter(FormView):
     template_name = "join_newsletter.html"
-    success_template_name = "join_newsletter_success.html"
     form_class = JoinNewsletterForm
-    context = {}
-    success_url = reverse_lazy('newsletter:join-newsletter-success')
-    user_email = None
-    is_bound = True
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.get_template_names(), self.get_context_data())
-
-    def post(self, request):
-        if self.get_context_data()['form'].is_valid(self):
-            self.form_valid(self.get_context_data())
-        return render(request, self.get_template_names(), self.get_context_data())
-
-    def get_context_data(self, *args, **kwargs):
-        self.context['form'] = self.form_class
-        self.context['email'] = self.user_email if self.user_email else None
-
-        return self.context
-
-    def get_template_names(self):
-        print(self.user_email)
-        if self.user_email:
-            return self.success_template_name
-        return self.template_name
+    form_id = None
 
     def form_valid(self, form):
         form.send_confirm_mail()
-        self.user_email = form.cleaned_data['email']
+        obj = form.save()
+        self.form_id = obj.pk
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse("newsletter:join-newsletter-success",
+                       kwargs={"id": self.form_id})
 
+class JoinNewsletterSuccess(DetailView):
+    template_name = "join_newsletter_success.html"
+    model = Member
 
-class JoinNewsletterSuccess(TemplateView):
-    user_email = None
-    pass
-# Create your views here.
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_object(self, queryset=None):
+        id_ = self.kwargs.get("id")
+        return get_object_or_404(self.model, id=id_)
