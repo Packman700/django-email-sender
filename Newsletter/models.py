@@ -10,6 +10,7 @@ class Member(models.Model):
     def __str__(self):
         return f"{self.id} {self.email}"
 
+
 class EmailMessage(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()

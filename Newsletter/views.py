@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views.generic import FormView, DetailView
 from .form import JoinNewsletterForm
 from .models import Member
@@ -18,6 +18,7 @@ class JoinNewsletter(FormView):
     def get_success_url(self):
         return reverse("newsletter:join-newsletter-success",
                        kwargs={"id": self.form_id})
+
 
 class JoinNewsletterSuccess(DetailView):
     template_name = "join_newsletter_success.html"
