@@ -24,10 +24,6 @@ class JoinNewsletterSuccess(DetailView):
     template_name = "join_newsletter_success.html"
     model = Member
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
     def get_object(self, queryset=None):
         id_ = self.kwargs.get("id")
         return get_object_or_404(self.model, id=id_)
