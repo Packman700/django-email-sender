@@ -1,0 +1,11 @@
+{% extends "mails/root.html" %}
+{% block content %}
+    {{ mail_body }}
+    {% if need_confirm %}
+        <p> Please confirm that this is your e-mail by clicking button</p>
+        <form action="{% url "confirm-join-newsletter" object.id %}" method="POST"> {% csrf_token %}
+            <input type="hidden" value="{{ object.uuid }}">
+            <input type="submit" value="Confirm Email">
+        </form>
+    {% endif %}
+{% endblock %}

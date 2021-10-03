@@ -1,8 +1,10 @@
 from django.db import models
 from datetime import datetime
+import uuid
 
 class Member(models.Model):
-    email = models.EmailField()
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+    email = models.EmailField(unique=True)
     confirmed = models.BooleanField(default=False)
     name = models.CharField(max_length=50)
     join_datetime = models.DateTimeField(default=datetime.now())
