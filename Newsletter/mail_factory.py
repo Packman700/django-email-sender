@@ -1,21 +1,14 @@
-from django.shortcuts import get_object_or_404
-from django.views.generic import DetailView
+from django.template.loader import render_to_string
+
 from django.conf import settings
 from .models import Member
 
-class JoinNewsletterWelcomeMail(DetailView):
-    template_name = "mails/welcome.html"
-    model = Member
-
-    need_confirm = None
-    id = uuid = None
-
-    def get_object(self, queryset=None):
-        uuid = self.kwargs.get("uuid")
-        return get_object_or_404(self.model, uuid=uuid)
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context['mail_body'] = settings.WELCOME_MAIL_BODY
-        return context
+def welcome_mail(uuid):
+    object_ = Member.objects.get(uuid=uuid)
+    context = {
+        'uuid': uuid,
+        'object': object_,
+        'mail_body': settings.WELCOME_MAIL_BODY
+    }
+    return render_to_string("mails/welcome.html", context).replace('\n', '')
 

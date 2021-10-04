@@ -19,8 +19,9 @@ def set_settings():
 
     # SETUP BACKEND
     settings.EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    # settings.EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     settings.EMAIL_HOST = "smtp.gmail.com"
-    settings.EMAIL_PORT = 507
+    settings.EMAIL_PORT = 587
     settings.EMAIL_USE_TLS = True
     settings.EMAIL_HOST_USER = login
     settings.EMAIL_HOST_PASSWORD = password

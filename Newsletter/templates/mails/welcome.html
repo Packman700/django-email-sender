@@ -1,11 +1,14 @@
 {% extends "mails/root.html" %}
+{#{% load fullurl %}#}
 {% block content %}
-    {{ mail_body }}
-    {% if need_confirm %}
-        <p> Please confirm that this is your e-mail by clicking button</p>
-        <form action="{% url "confirm-join-newsletter" object.id %}" method="POST"> {% csrf_token %}
-            <input type="hidden" value="{{ object.uuid }}">
-            <input type="submit" value="Confirm Email">
-        </form>
+    {{ mail_body|safe }}
+    {% if not object.confirmed %}
+        <p> Please confirm that this is your e-mail by
+{#            TODO get abs path and do confitm page #}
+            <a href="{% url "newsletter:join-newsletter-success" object.id %}">click a link</a>
+            {{ uuid }}
+            {#            {% url "newsletter:join-newsletter-success" object.id %}#}
+        </p>
+
     {% endif %}
 {% endblock %}
