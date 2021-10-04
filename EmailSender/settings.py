@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # MY APPS
-    'Newsletter'
+    'Newsletter',
+    # EXTRA APPS
+    'django.contrib.sites',
 ]
 
 MIDDLEWARE = [

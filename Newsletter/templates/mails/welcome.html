@@ -1,13 +1,12 @@
 {% extends "mails/root.html" %}
-{#{% load fullurl %}#}
+{% load full_url %}
 {% block content %}
+    {% include "mails/welcome_mail_message.html" %}
     {{ mail_body|safe }}
     {% if not object.confirmed %}
         <p> Please confirm that this is your e-mail by
-{#            TODO get abs path and do confitm page #}
-            <a href="{% url "newsletter:join-newsletter-success" object.id %}">click a link</a>
-            {{ uuid }}
-            {#            {% url "newsletter:join-newsletter-success" object.id %}#}
+{#            TODO link go to confitm page #}
+            <a href="{% full_url "newsletter:join-newsletter-success" object.id %}">click a link</a>
         </p>
 
     {% endif %}
