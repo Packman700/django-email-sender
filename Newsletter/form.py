@@ -6,7 +6,7 @@ from .mail_factory import welcome_mail
 
 
 class JoinNewsletterForm(forms.ModelForm):
-    NEED_CONFIRM = True
+    NEED_CONFIRM = settings.NEED_CONFIRM_JOIN_TO_NEWSLETTER
 
     confirmed = forms.BooleanField(widget=forms.HiddenInput, required=False)
 
@@ -14,20 +14,18 @@ class JoinNewsletterForm(forms.ModelForm):
         model = Member
         fields = [
             'email',
-            'name',
+            'username',
             'confirmed'
         ]
 
     def send_confirm_mail(self, uuid):
+        print("SSSSSSS")
         title = settings.WELCOME_MAIL_TITLE
         sender_email = settings.EMAIL_HOST_USER
         recipient_email = self.cleaned_data['email']
         email_content = welcome_mail(uuid)
 
-        send_mail(title, "", sender_email, [recipient_email],
-                  # ['domciotv2002@gmail.com'],
-                  html_message=email_content,
-                  )
+        send_mail(title, "", sender_email, [recipient_email], html_message=email_content)
 
     def clean_confirmed(self):
         self.confirmed = not self.NEED_CONFIRM

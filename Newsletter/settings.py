@@ -27,3 +27,7 @@ def set_settings():
 
     # WELCOME MAIL
     settings.WELCOME_MAIL_TITLE = "Welcome friend - Confirm Your Account"
+
+    settings.LOCAL_HOST_NAME = "127.0.0.1:8000"
+
+    settings.NEED_CONFIRM_JOIN_TO_NEWSLETTER = True

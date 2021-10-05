@@ -30,6 +30,14 @@ class JoinNewsletterSuccess(DetailView):
         return get_object_or_404(self.model, id=id_)
 
 
-class JoinNewsletterConfirm(TemplateView):
-    pass
+class JoinNewsletterConfirm(DetailView):
+    template_name = "join_newsletter_confirm.html"
+    model = Member
+
+    def get_object(self, queryset=None):
+        uuid = self.kwargs.get("uuid")
+        obj = get_object_or_404(self.model, uuid=uuid)
+        obj.confirmed = True
+        obj.save()
+        return obj
 

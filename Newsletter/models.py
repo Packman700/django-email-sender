@@ -6,7 +6,7 @@ class Member(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     confirmed = models.BooleanField(default=False)
-    name = models.CharField(max_length=50)
+    username = models.CharField(max_length=50)
     join_datetime = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
