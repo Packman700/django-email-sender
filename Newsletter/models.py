@@ -21,4 +21,32 @@ class EmailMessage(models.Model):
     def __str__(self):
         return f"{self.id} {self.title}"
 
-# Create your models here.
+
+class List(models.Model):
+    """ For storing emails in white and black list """
+    email_domain = models.CharField(max_length=255)
+
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def contains(cls, domain):
+        """Constrain is finding by simple string.endswith()"""
+        objects = cls.objects.all()
+        for obj in objects:
+            if domain.endswith(obj.email_domain):
+                return True
+        return False
+
+    def __str__(self):
+        return self.email_domain
+
+class WhiteList(List):
+    pass
+
+class BlackList(List):
+    pass
+
+# manage.py shell
+# from Newsletter.models import BlackList
+# BlackList.contains("a")

@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # MY APPS
     'Newsletter',
-    # EXTRA APPS
-    'django.contrib.sites',
+    # *EXTRA APPS
+    'django.contrib.sites',  # Get domain name
+    'admin_reorder',  # reorganise admin structure
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # *EXTRA MIDDLEWARE
+    'admin_reorder.middleware.ModelAdminReorder',  # reorganise admin structure
 ]
 
 ROOT_URLCONF = 'EmailSender.urls'
@@ -129,3 +132,24 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# *REORGANISE ADMIN PAGE
+ADMIN_REORDER = (
+    # Default django models
+    {'app': 'auth', 'label': 'Authorisation'},
+
+    # Newsletter app
+    {'app': 'Newsletter',
+     'label': 'newsletter black/white list',
+     'models': ('Newsletter.WhiteList',
+                'Newsletter.BlackList')
+     },
+    {'app': 'Newsletter',
+     'label': 'newsletter',
+     'models': ('Newsletter.EmailMessage',
+                'Newsletter.Member')
+     },
+
+    # Your app names
+    # 'MyApp',
+)
