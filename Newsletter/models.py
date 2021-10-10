@@ -1,6 +1,8 @@
-from django.db import models
-from datetime import datetime
 import uuid
+from datetime import datetime, timedelta
+
+from django.db import models
+
 
 class Member(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
@@ -11,6 +13,15 @@ class Member(models.Model):
 
     def __str__(self):
         return f"{self.id} {self.email}"
+
+    @classmethod
+    def delete_not_confirm_members(cls):
+        """Function delete all not confirmed accounts
+        after two days email no confirmation
+        """
+        objects = cls.objects.filter(confirmed=False,
+                                     join_datetime__lte=datetime.now() - timedelta(days=2))
+        objects.delete()
 
 
 class EmailMessage(models.Model):
@@ -41,12 +52,10 @@ class List(models.Model):
     def __str__(self):
         return self.email_domain
 
+
 class WhiteList(List):
     pass
 
+
 class BlackList(List):
     pass
-
-# manage.py shell
-# from Newsletter.models import BlackList
-# BlackList.contains("a")

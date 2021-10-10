@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # *EXTRA APPS
     'django.contrib.sites',  # Get domain name
     'admin_reorder',  # reorganise admin structure
+    'django_q',  # for schedule model tasks
 ]
 
 MIDDLEWARE = [
@@ -150,6 +151,19 @@ ADMIN_REORDER = (
                 'Newsletter.Member')
      },
 
-    # Your app names
+    #
+    'django_q',  # for schedule model tasks
+    ## Your app names
     # 'MyApp',
 )
+
+# django_q configuration
+Q_CLUSTER = {
+    'name': 'DjangORM',
+    'workers': 4,
+    'timeout': 90,
+    'retry': 120,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default'
+}
