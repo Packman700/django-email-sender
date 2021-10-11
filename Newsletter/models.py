@@ -9,7 +9,7 @@ class Member(models.Model):
     email = models.EmailField(unique=True)
     confirmed = models.BooleanField(default=False)
     username = models.CharField(max_length=50)
-    join_datetime = models.DateTimeField(default=datetime.now())
+    join_datetime = models.DateTimeField(default=datetime.now)
 
     def __str__(self):
         return f"{self.id} {self.email}"
