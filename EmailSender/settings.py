@@ -42,8 +42,9 @@ INSTALLED_APPS = [
     'Newsletter',
     # *EXTRA APPS
     'django.contrib.sites',  # Get domain name
-    'admin_reorder',  # reorganise admin structure
-    'django_q',  # for schedule model tasks
+    'admin_reorder',  # Reorganise admin structure
+    'django_q',  # For schedule model tasks
+    'pgtrigger',  # Add triggers to models
 ]
 
 MIDDLEWARE = [

@@ -28,9 +28,21 @@ class EmailMessage(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     send_time = models.DateTimeField()
+    is_send = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.id} {self.title}"
+
+    # def send_mail_to_all_members(self):
+    #     members_objects = Member.objects.filter(content=True)
+    #     members_dic = [
+    #         {'email': member.email,
+    #          'name': member.name} for
+    #         member in
+    #         members_objects
+    #     ]
+    #     print(members_dic)
+    #     self.is_send = False
 
 
 class List(models.Model):
