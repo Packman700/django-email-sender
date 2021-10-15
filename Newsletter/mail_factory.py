@@ -2,13 +2,14 @@
    are used to generate e-mails"""
 
 from django.template.loader import render_to_string
-from .models import Member
 
 
-def welcome_mail(uuid):
-    object_ = Member.objects.get(uuid=uuid)
+def welcome_mail(uuid, object_):
     context = {
         'uuid': uuid,
         'object': object_,
     }
     return render_to_string("mails/welcome.html", context).replace('\n', '')
+
+def default_mail(mail_body):
+    return render_to_string("mails/default_mail.html", {'mail_body': mail_body})

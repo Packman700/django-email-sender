@@ -1,8 +1,12 @@
 {% extends "mails/root.html" %}
 {% load full_url %}
 {% block content %}
-    {% include "mails/welcome_mail_message.html" with username=object.username %}
-    {{ mail_body|safe }}
+    <h1> Hi {{ object.username }} </h1>
+    <p>
+        I appreciate you join to newsletter.
+        Im sure you will be pleased with my next mails ;P
+    </p>
+
     {% if not object.confirmed %}
         <p> Please confirm that this is your e-mail by
             <a href="{% full_url "newsletter:confirm-join-newsletter" object.uuid %}">click a link</a>

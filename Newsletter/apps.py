@@ -8,6 +8,6 @@ class NewsletterConfig(AppConfig):
     name = 'Newsletter'
 
     def ready(self):
-        from .schedule import schedule_tasks
+        from .schedule import delete_not_confirmed_members_schedule
         set_settings()
-        schedule_tasks()
+        delete_not_confirmed_members_schedule()

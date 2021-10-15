@@ -23,7 +23,9 @@ class JoinNewsletterForm(forms.ModelForm):
         title = settings.WELCOME_MAIL_TITLE
         sender_email = settings.EMAIL_HOST_USER
         recipient_email = self.cleaned_data['email']
-        email_content = welcome_mail(uuid)
+
+        object_ = Member.objects.get(uuid=uuid)
+        email_content = welcome_mail(uuid, object_)
 
         send_mail(title, "", sender_email, [recipient_email], html_message=email_content)
 
