@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',  # Get domain name
     'admin_reorder',  # Reorganise admin structure
     'django_q',  # For schedule model tasks
-    'pgtrigger',  # Add triggers to models
 ]
 
 MIDDLEWARE = [
@@ -139,26 +138,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ADMIN_REORDER = (
     # Default django models
     {'app': 'auth', 'label': 'Authorisation'},
-
-    # Newsletter app
-    {'app': 'Newsletter',
-     'label': 'newsletter black/white list',
-     'models': ('Newsletter.WhiteList',
-                'Newsletter.BlackList')
-     },
-    {'app': 'Newsletter',
-     'label': 'newsletter',
-     'models': ('Newsletter.EmailMessage',
-                'Newsletter.Member')
-     },
-
-    #
-    'django_q',  # for schedule model tasks
-    ## Your app names
-    # 'MyApp',
+    ## Your apps names
+    # "my_app"
 )
-
-# django_q configuration
+# *django_q configuration
+# https://django-q.readthedocs.io/en/latest/configure.html
 Q_CLUSTER = {
     'name': 'DjangORM',
     'workers': 4,
