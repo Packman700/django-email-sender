@@ -4,79 +4,48 @@ HOW PREPARE YOUR YOUR GMAIL ACCOUNT
 https://youtu.be/UH8oHNDfTyQ?t=171
 """
 
-from os import environ
-
 from django.conf import settings
-
-login = environ.get('EMAIL_USER')  # If you want you can use string
-password = environ.get('EMAIL_PASSWORD')
 
 
 def set_settings():
     # VALIDATORS
+    add_apps()
+    add_admin_reorder()
     valid_login_password()
-    valid_apps_and_middleware()
     valid_is_settings_set()
 
-    # SETUP BACKEND
-    settings.EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    # settings.EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-    settings.EMAIL_HOST = "smtp.gmail.com"
-    settings.EMAIL_PORT = 587
-    settings.EMAIL_USE_TLS = True
-    settings.EMAIL_HOST_USER = login
-    settings.EMAIL_HOST_PASSWORD = password
-
     # PREFERENCES
-    settings.WELCOME_MAIL_TITLE = "Welcome friend - Confirm Your Account"
+    DEFAULT_PREFERENCES = {
+        "WELCOME_MAIL_TITLE": "Welcome friend - Confirm Your Account",
 
-    settings.LOCAL_HOST_NAME = "127.0.0.1:8000"
+        "LOCAL_HOST_NAME": "127.0.0.1:8000",
 
-    settings.NEED_CONFIRM_JOIN_TO_NEWSLETTER = True
-    settings.AFTER_HOW_MANY_DAYS_DELETE_USER = 1
+        "NEED_CONFIRM_JOIN_TO_NEWSLETTER": True,
+        "AFTER_HOW_MANY_DAYS_DELETE_USER": 1,
 
-    settings.ENABLE_WHITE_LIST = False
-    settings.ENABLE_BACK_LIST = False
+        "ENABLE_WHITE_LIST": False,
+        "ENABLE_BACK_LIST": False,
+    }
+    for setting, default_value in DEFAULT_PREFERENCES.items():
+        set_default_if_none(setting, default_value)
 
-    # REORGANISE ADMIN PAGE
-    settings.ADMIN_REORDER += (
-        {'app': __package__,
-         'label': 'newsletter black/white list',
-         'models': (f'{__package__}.WhiteList',
-                    f'{__package__}.BlackList')
-         },
-        {'app': __package__,
-         'label': 'newsletter',
-         'models': (f'{__package__}.EmailMessage',
-                    f'{__package__}.Member')
-         },
-    )
+
+def set_default_if_none(setting_name, default_value):
+    """This allow to simply set all settings"""
+    if getattr(settings, setting_name, None) is None:
+        setattr(settings, setting_name, default_value)
 
 
 def valid_login_password():
-    if login is None:
-        raise TypeError('EMAIL_USER is None')
-    if password is None:
-        raise TypeError('EMAIL_PASSWORD is None')
-
-
-def valid_apps_and_middleware():
-    REQUIRED_MIDDLEWARE = 'admin_reorder.middleware.ModelAdminReorder'
-    REQUIRED_APPLICATIONS = [
-        'django.contrib.sites',
-        'admin_reorder',
-        'django_q'
-    ]
-
-    if REQUIRED_MIDDLEWARE not in settings.MIDDLEWARE:
-        raise ImportError(f"{REQUIRED_MIDDLEWARE} not found in INSTALLED_APPS")
-
-    for app_name in REQUIRED_APPLICATIONS:
-        if app_name not in settings.INSTALLED_APPS:
-            raise ImportError(f"{app_name} not found in INSTALLED_APPS")
+    """Check if user set username and password for mail"""
+    if not settings.EMAIL_HOST_USER:
+        raise TypeError('EMAIL_HOST_USER is None')
+    if not settings.EMAIL_HOST_PASSWORD:
+        raise TypeError('EMAIL_HOST_PASSWORD is None')
 
 
 def valid_is_settings_set():
+    """Simple settings validator"""
     try:
         settings.ADMIN_REORDER
     except AttributeError:
@@ -86,3 +55,52 @@ def valid_is_settings_set():
         settings.Q_CLUSTER
     except AttributeError:
         raise AttributeError("Add Q_CLUSTER to your settings")
+
+
+def add_apps():
+    """Add needed apps to project"""
+    REQUIRED_APPLICATIONS = [
+        'admin_reorder',  # Reorganise admin structure
+        'django_q',  # For schedule model tasks
+    ]
+
+    # settings.INSTALLED_APPS.append('django_q')
+    for app_name in REQUIRED_APPLICATIONS:
+        if app_name not in settings.INSTALLED_APPS:
+            settings.INSTALLED_APPS += app_name
+
+
+def add_admin_reorder():
+    ADMIN_REORDER_PACKAGE_SETTINGS = (
+        {
+            'app': __package__,
+            'label': 'newsletter black/white list',
+            'models': (f'{__package__}.WhiteList',
+                       f'{__package__}.BlackList')
+        },
+        {
+            'app': __package__,
+            'label': 'newsletter',
+            'models': (f'{__package__}.EmailMessage',
+                       f'{__package__}.Member')
+        }
+    )
+
+    """Create ADMIN_REORDER file"""
+    if getattr(settings, 'ADMIN_REORDER', None) is not None:
+        if __package__ in settings.ADMIN_REORDER:
+            settings.ADMIN_REORDER = tuple(setting for setting in settings.ADMIN_REORDER if setting != __package__)
+            settings.ADMIN_REORDER += ADMIN_REORDER_PACKAGE_SETTINGS
+        return None
+
+    settings.ADMIN_REORDER = (
+        {'app': 'auth', 'label': 'Authorisation'},
+    )
+
+    apps = settings.INSTALLED_APPS
+    for app_name in apps:
+        if app_name == __package__:
+            continue
+        settings.ADMIN_REORDER = settings.ADMIN_REORDER + (app_name,)
+
+    settings.ADMIN_REORDER += ADMIN_REORDER_PACKAGE_SETTINGS

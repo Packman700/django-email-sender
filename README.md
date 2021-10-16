@@ -2,27 +2,16 @@
 1. pip install -r requirements.txt 
 
 2. Add these settings to project settings
-```
+``` Py
 INSTALLED_APPS = [
-    ...
+    ...,
     'Newsletter',  # Main app
-    'django.contrib.sites',  # Get domain name
-    'admin_reorder',  # Reorganise admin structure
-    'django_q',  # For schedule model tasks
 ]
 
 MIDDLEWARE = [
-    ...
-    'admin_reorder.middleware.ModelAdminReorder',  # reorganise admin structure
+    ...,
+    'admin_reorder.middleware.ModelAdminReorder'
 ]
-
-# REORGANISE ADMIN PAGE
-ADMIN_REORDER = (
-    # Default django models
-    {'app': 'auth', 'label': 'Authorisation'},
-    # "your_app_1",
-    # "your_app_2",
-)
 
 # DJANGO_Q CONFIG
 # doc https://django-q.readthedocs.io/en/latest/configure.html
@@ -37,17 +26,71 @@ Q_CLUSTER = {
     'orm': 'default'
 }
 ```
+3. *If you use ADMIN_REORDER add this line of code
+``` Py
+ADMIN_REORDER = (
+    ...,
+    "Newsletter",
+) 
+```
+4. Add app to urls
+``` Py
+   urlpatterns = [
+      ...,
+      path('mail/', include('Newsletter.urls'))
+   ]
+```
+5. Config smtp server
+   - If you use google smtp you can use this config:
+     ``` Py
+       settings.EMAIL_HOST_USER = environ.get('EMAIL_USER')
+       settings.EMAIL_HOST_PASSWORD = environ.get('EMAIL_PASSWORD')  # If you want you can use string
+       settings.EMAIL_HOST = "smtp.gmail.com"
+       settings.EMAIL_PORT = 587
+       settings.EMAIL_USE_TLS = True
+     ```
+   - **ATTENTION** You need on ```Access to less secure applications``` in your Gmail account
+6. Adjust app preferences to your needs (look bellow)
+5. manage.py makemigrations
+6. manage.py migrate
+7. manage.py qcluster 
+8. manage.py runserver
 
-3. Config Newsletter app settings
-   - Set ```login``` and ```password``` for smtp client
-   - Config smtp server
-   - If you want you can set change preferences and templates
-4. manage.py makemigrations
-5. manage.py migrate
-6. manage.py qcluster
-7. manage.py runserver
+Now you can add new mails to newsletter using admin view
 
-You can add new mails to newsletter using admin view
+# Overwrite template
+If you want you can overwrite default templates. By create reconstruct file structure
+showed bellow.
 
-If you want you can edit templates 
+Templates to overwrite (to get basic template structure check package repo)
+```
+your_project
+     |-- your_project/
+     |-- myapp/
+     |-- templates/
+          |-- Newsletter/
+              |-- mails/
+                  |-- default_mail.html
+                  |-- root.html
+                  |-- welcome.html
+              |-- views/
+                  |-- join_newsletter.html
+                  |-- join_newsletter_confirm.html
+                  |-- join_newsletter_success.html
+```
 
+# Preferences default values
+``` py
+WELCOME_MAIL_TITLE = "Welcome friend - Confirm Your Account"
+
+LOCAL_HOST_NAME = "127.0.0.1:8000"   
+
+NEED_CONFIRM_JOIN_TO_NEWSLETTER = True
+AFTER_HOW_MANY_DAYS_DELETE_USER = 1  # Delete only not confirmed users
+
+ENABLE_WHITE_LIST = False  # Accept only mails with suffix in white list table 
+ENABLE_BACK_LIST = False  # Accept only mails with suffix with is not in black list table 
+```
+
+# Info
+Module support Site domain (but I don't test this yet) :)

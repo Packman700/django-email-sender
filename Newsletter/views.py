@@ -5,7 +5,7 @@ from .models import Member
 from django.urls import reverse
 
 class JoinNewsletter(FormView):
-    template_name = "join_newsletter.html"
+    template_name = f"{__package__}/views/join_newsletter.html"
     form_class = JoinNewsletterForm
     form_id = None
 
@@ -22,7 +22,7 @@ class JoinNewsletter(FormView):
 
 
 class JoinNewsletterSuccess(DetailView):
-    template_name = "join_newsletter_success.html"
+    template_name = f"{__package__}/views/join_newsletter_success.html"
     model = Member
 
     def get_object(self, queryset=None):
@@ -31,7 +31,7 @@ class JoinNewsletterSuccess(DetailView):
 
 
 class JoinNewsletterConfirm(DetailView):
-    template_name = "join_newsletter_confirm.html"
+    template_name = f"{__package__}/views/join_newsletter_confirm.html"
     model = Member
 
     def get_object(self, queryset=None):

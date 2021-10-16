@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from os import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,10 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # MY APPS
     'Newsletter',
-    # *EXTRA APPS
-    'django.contrib.sites',  # Get domain name
-    'admin_reorder',  # Reorganise admin structure
-    'django_q',  # For schedule model tasks
 ]
 
 MIDDLEWARE = [
@@ -54,8 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # *EXTRA MIDDLEWARE
-    'admin_reorder.middleware.ModelAdminReorder',  # reorganise admin structure
+    'admin_reorder.middleware.ModelAdminReorder'
 ]
 
 ROOT_URLCONF = 'EmailSender.urls'
@@ -134,14 +130,15 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# *REORGANISE ADMIN PAGE
-ADMIN_REORDER = (
-    # Default django models
-    {'app': 'auth', 'label': 'Authorisation'},
-    ## Your apps names
-    # "my_app"
-)
-# *django_q configuration
+# EMAIL CLIENT
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = environ.get('EMAIL_PASSWORD')
+
+
+# DJANGO_Q CONFIG
 # https://django-q.readthedocs.io/en/latest/configure.html
 Q_CLUSTER = {
     'name': 'DjangORM',

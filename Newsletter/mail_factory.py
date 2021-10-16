@@ -9,7 +9,7 @@ def welcome_mail(uuid, object_):
         'uuid': uuid,
         'object': object_,
     }
-    return render_to_string("mails/welcome.html", context).replace('\n', '')
+    return render_to_string("Newsletter/mails/welcome.html", context).replace('\n', '')
 
 def default_mail(mail_body):
-    return render_to_string("mails/default_mail.html", {'mail_body': mail_body})
+    return render_to_string("Newsletter/mails/default_mail.html", {'mail_body': mail_body})
