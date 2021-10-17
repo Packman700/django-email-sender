@@ -5,12 +5,13 @@
 ``` Py
 INSTALLED_APPS = [
     ...,
-    'Newsletter',  # Main app
+    'django_newsletter',  # Main app
+    'django_q'  # Async tasks
 ]
 
 MIDDLEWARE = [
     ...,
-    'admin_reorder.middleware.ModelAdminReorder'
+    'admin_reorder.middleware.ModelAdminReorder'  # Reorder admin view
 ]
 
 # DJANGO_Q CONFIG
@@ -30,14 +31,14 @@ Q_CLUSTER = {
 ``` Py
 ADMIN_REORDER = (
     ...,
-    "Newsletter",
+    "django_newsletter",
 ) 
 ```
 4. Add app to urls
 ``` Py
    urlpatterns = [
       ...,
-      path('mail/', include('Newsletter.urls'))
+      path('mail/', include('django_newsletter.urls'))
    ]
 ```
 5. Config smtp server
@@ -68,7 +69,7 @@ your_project
      |-- your_project/
      |-- myapp/
      |-- templates/
-          |-- Newsletter/
+          |-- django_newsletter/
               |-- mails/
                   |-- default_mail.html
                   |-- root.html

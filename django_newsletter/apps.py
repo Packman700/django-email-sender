@@ -2,10 +2,9 @@ from django.apps import AppConfig
 
 from .settings import set_settings
 
-
-class NewsletterConfig(AppConfig):
+class DjangoNewsletterConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'Newsletter'
+    name = 'django_newsletter'
 
     def ready(self):
         from .schedule import delete_not_confirmed_members_schedule

@@ -18,5 +18,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('mail/', include('Newsletter.urls'))
+    path('mail/', include('django_newsletter.urls'))
 ]
