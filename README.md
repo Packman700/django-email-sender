@@ -84,8 +84,9 @@ your_project
                   |-- join_newsletter_success.html
 ```
 
-# Url name to use
-"newsletter:join-newsletter" - This is join newsletter url name
+# Join newsletter url
+"newsletter:join-newsletter" - url name
+<localhost>/mail/join-newsletter
 
 # Preferences default values
 ``` py
