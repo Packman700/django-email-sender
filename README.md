@@ -1,7 +1,7 @@
 # Setup
-1. pip install -r requirements.txt 
-
-2. Add these settings to project settings
+1. Copy django_newsletter and requirements.txt to your django project root
+2. pip install -r requirements.txt
+3. Add these settings to project settings
 ``` Py
 INSTALLED_APPS = [
     ...,
@@ -27,35 +27,39 @@ Q_CLUSTER = {
     'orm': 'default'
 }
 ```
-3. *If you use ADMIN_REORDER add this line of code
+4. *If you use ADMIN_REORDER add this line of code
 ``` Py
 ADMIN_REORDER = (
     ...,
     "django_newsletter",
 ) 
 ```
-4. Add app to urls
+5. Add app to urls
 ``` Py
+   from django.urls import path, include
+
    urlpatterns = [
       ...,
       path('mail/', include('django_newsletter.urls'))
    ]
 ```
-5. Config smtp server
+6. Config smtp server
    - If you use google smtp you can use this config:
      ``` Py
-       settings.EMAIL_HOST_USER = environ.get('EMAIL_USER')
-       settings.EMAIL_HOST_PASSWORD = environ.get('EMAIL_PASSWORD')  # If you want you can use string
-       settings.EMAIL_HOST = "smtp.gmail.com"
-       settings.EMAIL_PORT = 587
-       settings.EMAIL_USE_TLS = True
+       from os import environ
+     
+       EMAIL_HOST_USER = environ.get('EMAIL_USER')
+       EMAIL_HOST_PASSWORD = environ.get('EMAIL_PASSWORD')  # If you want you can use string
+       EMAIL_HOST = "smtp.gmail.com"
+       EMAIL_PORT = 587
+       EMAIL_USE_TLS = True
      ```
    - **ATTENTION** You need on ```Access to less secure applications``` in your Gmail account
-6. Adjust app preferences to your needs (look bellow)
-5. manage.py makemigrations
-6. manage.py migrate
-7. manage.py qcluster 
-8. manage.py runserver
+7. Adjust app preferences to your needs (look bellow)
+8. manage.py makemigrations
+9. manage.py migrate
+10. manage.py qcluster  **Must always run in background**
+11. manage.py runserver 
 
 Now you can add new mails to newsletter using admin view
 
@@ -79,6 +83,9 @@ your_project
                   |-- join_newsletter_confirm.html
                   |-- join_newsletter_success.html
 ```
+
+# Url name to use
+"newsletter:join-newsletter" - This is join newsletter url name
 
 # Preferences default values
 ``` py
