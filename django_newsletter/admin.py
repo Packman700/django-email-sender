@@ -1,9 +1,8 @@
 from django.contrib import admin
 
-from .models import (Member,
-                     EmailMessage,
-                     BlackList,
-                     WhiteList)
+from .models.access_lists import BlackList, WhiteList
+from .models.email_message import EmailMessage
+from .models.member import Member
 
 admin.site.register(Member)
 admin.site.register(BlackList)

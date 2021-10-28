@@ -1,6 +1,7 @@
 """Here we store all custom exceptions"""
 from django.core.exceptions import ValidationError
 
+
 # settings exceptions
 
 class EmailHostUserIsNoneError(Exception):
@@ -45,4 +46,3 @@ class WhiteListValidationError(ValidationError):
 class BlackListValidationError(ValidationError):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-

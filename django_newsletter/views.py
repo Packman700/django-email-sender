@@ -1,8 +1,10 @@
 from django.shortcuts import get_object_or_404
-from django.views.generic import FormView, DetailView, TemplateView
-from .form import JoinNewsletterForm
-from .models import Member
 from django.urls import reverse
+from django.views.generic import FormView, DetailView
+
+from .form import JoinNewsletterForm
+from .models.member import Member
+
 
 class JoinNewsletter(FormView):
     template_name = f"{__package__}/views/join_newsletter.html"
@@ -15,7 +17,7 @@ class JoinNewsletter(FormView):
         uuid = obj.uuid
         form.send_confirm_mail(uuid=uuid)
         return super().form_valid(form)
-    
+
     def get_success_url(self):
         return reverse("newsletter:join-newsletter-success",
                        kwargs={"id": self.form_id})
@@ -40,4 +42,3 @@ class JoinNewsletterConfirm(DetailView):
         obj.confirmed = True
         obj.save()
         return obj
-

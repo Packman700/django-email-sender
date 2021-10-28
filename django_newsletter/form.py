@@ -1,9 +1,11 @@
 from django import forms
-from .exceptions import WhiteListValidationError, BlackListValidationError
-from django.core.mail import send_mail
 from django.conf import settings
-from .models import Member, WhiteList, BlackList
+from django.core.mail import send_mail
+
+from .exceptions import WhiteListValidationError, BlackListValidationError
 from .mail_factory import welcome_mail
+from .models.access_lists import WhiteList, BlackList
+from .models.member import Member
 
 
 class JoinNewsletterForm(forms.ModelForm):

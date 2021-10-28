@@ -1,11 +1,11 @@
 """ File store all schedule create functions """
 
 from django_q.tasks import Schedule
-from exceptions import IdIsNotTypeIntError, InvalidMethodValueError
+from .exceptions import IdIsNotTypeIntError, InvalidMethodValueError
 
 
 def delete_not_confirmed_members_schedule(name="Delete not confirmed members",
-                                          func=f'{__package__}.models.Member.delete_not_confirm_members'):
+                                          func=f'{__package__}.models.member.Member.delete_not_confirm_members'):
     """Schedule deletion not confirmed members"""
     if obj := Schedule.objects.filter(func=func, name=name):
         obj.delete()
@@ -14,7 +14,7 @@ def delete_not_confirmed_members_schedule(name="Delete not confirmed members",
 
 
 def schedule_mail_message(id_, method, date,
-                          func=f"{__package__}.models.EmailMessage.send_mail_to_all_members"):
+                          func=f"{__package__}.models.email_message.EmailMessage.send_mail_to_all_members"):
     """Schedule send email"""
     if not isinstance(id_, int):
         raise IdIsNotTypeIntError
