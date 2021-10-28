@@ -1,4 +1,5 @@
 """Here we store all custom exceptions"""
+from django.core.exceptions import ValidationError
 
 # settings exceptions
 
@@ -32,3 +33,16 @@ class IdIsNotTypeIntError(Exception):
 class InvalidMethodValueError(Exception):
     def __init__(self, msg='Method argument accept only "DELETE", "INSERT" and "UPDATE" string value', *args, **kwargs):
         super().__init__(msg, *args, **kwargs)
+
+
+# white & black list errors
+
+class WhiteListValidationError(ValidationError):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+class BlackListValidationError(ValidationError):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
