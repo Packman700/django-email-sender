@@ -5,6 +5,10 @@ https://youtu.be/UH8oHNDfTyQ?t=171
 """
 
 from django.conf import settings
+from .exceptions import (EmailHostUserIsNoneError,
+                         EmailPasswordIsNoneError,
+                         AdminReorderIsNotSetError,
+                         QClusterIsNotSetError)
 
 
 def set_settings():
@@ -39,9 +43,9 @@ def set_default_if_none(setting_name, default_value):
 def valid_login_password():
     """Check if user set username and password for mail"""
     if not settings.EMAIL_HOST_USER:
-        raise TypeError('EMAIL_HOST_USER is None')
+        raise EmailHostUserIsNoneError
     if not settings.EMAIL_HOST_PASSWORD:
-        raise TypeError('EMAIL_HOST_PASSWORD is None')
+        raise EmailPasswordIsNoneError
 
 
 def valid_is_settings_set():
@@ -49,12 +53,12 @@ def valid_is_settings_set():
     try:
         settings.ADMIN_REORDER
     except AttributeError:
-        raise AttributeError("Add ADMIN_REORDER to your settings")
+        raise AdminReorderIsNotSetError
 
     try:
         settings.Q_CLUSTER
     except AttributeError:
-        raise AttributeError("Add Q_CLUSTER to your settings")
+        raise QClusterIsNotSetError
 
 
 def add_apps():

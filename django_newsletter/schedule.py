@@ -1,6 +1,7 @@
 """ File store all schedule create functions """
 
 from django_q.tasks import Schedule
+from exceptions import IdIsNotTypeIntError, InvalidMethodValueError
 
 
 def delete_not_confirmed_members_schedule(name="Delete not confirmed members",
@@ -16,9 +17,9 @@ def schedule_mail_message(id_, method, date,
                           func=f"{__package__}.models.EmailMessage.send_mail_to_all_members"):
     """Schedule send email"""
     if not isinstance(id_, int):
-        raise ValueError("id_ must be int")
+        raise IdIsNotTypeIntError
     if method not in ["DELETE", "INSERT", "UPDATE"]:
-        raise ValueError("Invalid method argument value")
+        raise InvalidMethodValueError
 
     name = f"Send mail {id_}"
 
