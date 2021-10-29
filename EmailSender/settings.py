@@ -24,9 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ir&_q4zovnf!*h4*_e#5vfiz+5_#y_ic!3-%^0=(2*ztb405rk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if str(environ.get('IS_PRODUCTION')).lower() in ["0", "false"] else False
 
-ALLOWED_HOSTS = []
+# TODO ADD CD DEPLOY WEBSITE INTO HEROKU
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
