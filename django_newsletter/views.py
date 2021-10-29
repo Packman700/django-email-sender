@@ -6,6 +6,7 @@ from .form import JoinNewsletterForm
 from .models.member import Member
 
 
+# TODO ADD BOOTSTRAP STYLE TO VIEWS
 class JoinNewsletter(FormView):
     template_name = f"{__package__}/views/join_newsletter.html"
     form_class = JoinNewsletterForm
