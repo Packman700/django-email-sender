@@ -11,7 +11,6 @@ class DjangoNewsletterConfig(AppConfig):
 
     def ready(self):
         set_settings()
-        if 'makemigrations' in sys.argv or 'migrate' in sys.argv:
-            return
-        from .schedule import delete_not_confirmed_members_schedule
-        delete_not_confirmed_members_schedule()
+        if 'runserver' in sys.argv:
+            from .schedule import delete_not_confirmed_members_schedule
+            delete_not_confirmed_members_schedule()
