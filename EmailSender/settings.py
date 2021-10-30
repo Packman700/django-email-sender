@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-ir&_q4zovnf!*h4*_e#5vfiz+5_#y_ic!3-%^0=(2*ztb405rk
 # DEBUG = True if str(environ.get('IS_PRODUCTION')).lower() in ["0", "false"] else False
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://my-django-newsletter.herokuapp.com/']
+ALLOWED_HOSTS = ['my-django-newsletter.herokuapp.com']
 if DEBUG:
     ALLOWED_HOSTS.append('127.0.0.1')
 
