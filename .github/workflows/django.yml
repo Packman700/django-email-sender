@@ -17,6 +17,7 @@ jobs:
     env:
       EMAIL_USER: ${{ secrets.EMAIL_USER }}
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     steps:
       - uses: actions/checkout@v2
@@ -31,10 +32,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-#      - name: Make migrations
-#        run: |
-#          python manage.py makemigrations
-#          python manage.py migrate
+      - name: Migrate
+        run: |
+          python manage.py migrate
 
       - name: Run Tests
         run: |
