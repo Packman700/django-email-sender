@@ -27,9 +27,9 @@ SECRET_KEY = 'django-insecure-ir&_q4zovnf!*h4*_e#5vfiz+5_#y_ic!3-%^0=(2*ztb405rk
 # DEBUG = True if str(environ.get('IS_PRODUCTION')).lower() in ["0", "false"] else False
 DEBUG = True
 
-# TODO ADD CD DEPLOY WEBSITE INTO HEROKU
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['https://my-django-newsletter.herokuapp.com/']
+if DEBUG:
+    ALLOWED_HOSTS.append('127.0.0.1')
 
 # Application definition
 
@@ -122,7 +122,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+TIME_ZONE = 'Europe/Warsaw'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
