@@ -27,7 +27,8 @@ SECRET_KEY = environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if str(environ.get('IS_PRODUCTION')).lower() in ["0", "false"] else False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'my-django-newsletter.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', environ.get('HOST_DOMAIN')]
+HOST_DOMAIN = environ.get('HOST_DOMAIN') if not DEBUG else None
 
 # Application definition
 

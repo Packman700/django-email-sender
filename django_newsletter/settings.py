@@ -22,7 +22,7 @@ def set_settings():
     DEFAULT_PREFERENCES = {
         "WELCOME_MAIL_TITLE": "Welcome friend - Confirm Your Account",
 
-        "LOCAL_HOST_NAME": "127.0.0.1:8000",
+        "HOST_DOMAIN": "127.0.0.1:8000",
 
         "NEED_CONFIRM_JOIN_TO_NEWSLETTER": True,
         "AFTER_HOW_MANY_DAYS_DELETE_USER": 1,
