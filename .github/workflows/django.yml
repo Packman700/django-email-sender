@@ -17,6 +17,8 @@ jobs:
     env:
       EMAIL_USER: ${{ secrets.EMAIL_USER }}
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      HOST_DOMAIN: ${{ secrets.HOST_DOMAIN }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     steps:
       - uses: actions/checkout@v2
@@ -33,7 +35,6 @@ jobs:
 
       - name: Make migrations
         run: |
-          python manage.py makemigrations
           python manage.py migrate
 
       - name: Run Tests
