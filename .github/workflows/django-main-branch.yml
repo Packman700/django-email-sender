@@ -42,12 +42,13 @@ jobs:
           python manage.py test
           
   heroku-deply:
-    # Test if not run when build fail    
     needs: build
     
     runs-on: ubuntu-latest
       
     steps:
+      - uses: actions/checkout@v2
+      
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
