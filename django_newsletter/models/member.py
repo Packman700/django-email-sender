@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime, timedelta
-
+from django.core.mail import send_mail
+from django_newsletter.mail_factory import welcome_mail
 from django.conf import settings
 from django.db import models
 
@@ -24,3 +25,16 @@ class Member(models.Model):
         objects = cls.objects.filter(confirmed=False,
                                      join_datetime__lte=datetime.now() - timedelta(days=countdown_days))
         objects.delete()
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.__send_welcome_mail()
+
+    def __send_welcome_mail(self):
+        title = settings.WELCOME_MAIL_TITLE
+        sender_email = settings.EMAIL_HOST_USER
+        recipient_email = self.email
+
+        email_content = welcome_mail(uuid, self)
+
+        send_mail(title, "", sender_email, [recipient_email], html_message=email_content)

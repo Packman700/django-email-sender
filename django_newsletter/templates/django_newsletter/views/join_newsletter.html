@@ -1,4 +1,7 @@
-<form method="POST"> {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Join newsletter">
-</form>
+{% extends 'root.html' %}
+{% block content %}
+    {# MESSAGES #}
+    {% include 'django_newsletter/blocks/messages.html' with messages=messages %}
+    {# FORM #}
+    {% include 'django_newsletter/blocks/join_form.html' with form=form %}
+{% endblock %}

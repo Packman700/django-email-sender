@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # MY APPS
     'django_newsletter',
-    'django_q'
+    'django_q',
+    'crispy_forms'
 ]
 
 MIDDLEWARE = [
@@ -151,5 +152,7 @@ Q_CLUSTER = {
     'bulk': 10,
     'orm': 'default'
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 django_heroku.settings(locals())

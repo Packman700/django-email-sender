@@ -2,9 +2,9 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db import models
 
-from .member import Member
-from ..mail_factory import default_mail
-from ..schedule import schedule_mail_message
+from django_newsletter.models.member import Member
+from django_newsletter.mail_factory import default_mail
+from django_newsletter.schedule import schedule_mail_message
 
 
 class EmailMessage(models.Model):

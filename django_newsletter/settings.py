@@ -5,10 +5,10 @@ https://youtu.be/UH8oHNDfTyQ?t=171
 """
 
 from django.conf import settings
-from .exceptions import (EmailHostUserIsNoneError,
-                         EmailPasswordIsNoneError,
-                         AdminReorderIsNotSetError,
-                         QClusterIsNotSetError)
+from django_newsletter.exceptions import (EmailHostUserIsNoneError,
+                                          EmailPasswordIsNoneError,
+                                          AdminReorderIsNotSetError,
+                                          QClusterIsNotSetError)
 
 
 def set_settings():

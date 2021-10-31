@@ -2,7 +2,7 @@ import sys
 
 from django.apps import AppConfig
 
-from .settings import set_settings
+from django_newsletter.settings import set_settings
 
 
 class DjangoNewsletterConfig(AppConfig):

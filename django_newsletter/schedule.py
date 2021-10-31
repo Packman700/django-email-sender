@@ -1,7 +1,8 @@
 """ File store all schedule create functions """
 
 from django_q.tasks import Schedule
-from .exceptions import IdIsNotTypeIntError, InvalidMethodValueError
+from django_newsletter.exceptions import (IdIsNotTypeIntError,
+                                          InvalidMethodValueError)
 
 
 def delete_not_confirmed_members_schedule(name="Delete not confirmed members",

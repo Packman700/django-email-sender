@@ -1,0 +1,5 @@
+{% load crispy_forms_filters %}
+<form method="POST"> {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Join newsletter" class="btn btn-success">
+</form>
