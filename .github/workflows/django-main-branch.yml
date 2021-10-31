@@ -1,9 +1,12 @@
-name: Django CI
+name: Django CI/CD
 
 on:
   push:
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
@@ -17,6 +20,7 @@ jobs:
     env:
       EMAIL_USER: ${{ secrets.EMAIL_USER }}
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      HOST_DOMAIN: ${{ secrets.HOST_DOMAIN }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     steps:
@@ -32,10 +36,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Migrate
+      - name: Make migrations
         run: |
           python manage.py migrate
 
       - name: Run Tests
         run: |
           python manage.py test
+          
+  heroku-deply:
+    # Test if not run when build fail    
+    needs: build
+    
+    runs-on: ubuntu-latest
+      
+    steps:
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
