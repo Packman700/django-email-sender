@@ -2,6 +2,12 @@
 {% block content %}
     {# MESSAGES #}
     {% include 'django_newsletter/blocks/messages.html' with messages=messages %}
+    <div class="d-flex flex-column height-screen-height">
+        {% include "django_newsletter/blocks/navbar.html" %}
+        {% include 'django_newsletter/blocks/main_banner.html' %}
+
+
+    </div>
     {# FORM #}
     {% include 'django_newsletter/blocks/join_form.html' with form=form %}
 {% endblock %}
