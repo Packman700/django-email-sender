@@ -1,3 +1,4 @@
+https://my-django-newsletter.herokuapp.com/
 # Setup
 1. Copy django_newsletter and requirements.txt to your django project root
 2. pip install -r requirements.txt
