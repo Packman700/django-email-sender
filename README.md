@@ -56,9 +56,13 @@ ADMIN_REORDER = (
        EMAIL_USE_TLS = True
      ```
    - **ATTENTION** You need on ```Access to less secure applications``` in your Gmail account
-7. Adjust app preferences to your needs (look bellow)
-8. manage.py makemigrations
-9. manage.py migrate
+7. Add ```HOST_DOMAIN``` on production 
+   ```py 
+   HOST_DOMAIN = 'Your_domain'
+    ```
+8. Adjust app preferences to your needs (look bellow)
+9. manage.py makemigrations
+10.manage.py migrate
 10. manage.py qcluster  **Must always run in background**
 11. manage.py runserver 
 

@@ -1,11 +1,9 @@
 from django.urls import path
-from .views import (JoinNewsletter,
-                    JoinNewsletterSuccess,
-                    JoinNewsletterConfirm)
+from django_newsletter.views import (JoinNewsletter,
+                                     confirm_join_to_newsletter)
 
 app_name = "newsletter"
 urlpatterns = [
-    path("join-newsletter/", JoinNewsletter.as_view(), name='join-newsletter'),
-    path("join-newsletter/thanks/<int:id>", JoinNewsletterSuccess.as_view(), name='join-newsletter-success'),
-    path("join-newsletter/confirm/<uuid:uuid>", JoinNewsletterConfirm.as_view(), name='confirm-join-newsletter'),
+    path("", JoinNewsletter.as_view(), name='join-newsletter'),
+    path("join-newsletter/confirm/<uuid:uuid>", confirm_join_to_newsletter, name='confirm-join-newsletter'),
 ]

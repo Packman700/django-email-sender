@@ -9,5 +9,6 @@ register = template.Library()
 def get_full_url(input_url, *args):
     url_domain = settings.HOST_DOMAIN
     url_directory = reverse(input_url, args=args)
+    url_protocol = "http://" if settings.DEBUG else "https://"
 
-    return "https://" + url_domain + url_directory
+    return url_protocol + url_domain + url_directory

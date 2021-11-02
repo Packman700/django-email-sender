@@ -1,11 +1,9 @@
 from django import forms
 from django.conf import settings
-from django.core.mail import send_mail
 
-from .exceptions import WhiteListValidationError, BlackListValidationError
-from .mail_factory import welcome_mail
-from .models.access_lists import WhiteList, BlackList
-from .models.member import Member
+from django_newsletter.exceptions import WhiteListValidationError, BlackListValidationError
+from django_newsletter.models.access_lists import WhiteList, BlackList
+from django_newsletter.models.member import Member
 
 
 class JoinNewsletterForm(forms.ModelForm):
@@ -20,16 +18,6 @@ class JoinNewsletterForm(forms.ModelForm):
             'username',
             'confirmed'
         ]
-
-    def send_confirm_mail(self, uuid):
-        title = settings.WELCOME_MAIL_TITLE
-        sender_email = settings.EMAIL_HOST_USER
-        recipient_email = self.cleaned_data['email']
-
-        object_ = Member.objects.get(uuid=uuid)
-        email_content = welcome_mail(uuid, object_)
-
-        send_mail(title, "", sender_email, [recipient_email], html_message=email_content)
 
     def clean_confirmed(self):
         self.confirmed = not self.NEED_CONFIRM
