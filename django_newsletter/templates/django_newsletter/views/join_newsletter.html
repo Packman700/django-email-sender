@@ -1,20 +1,37 @@
 {% extends 'root.html' %}
 {% block content %}
     <!-- Messages -->
-    {% include 'django_newsletter/blocks/messages.html' with messages=messages %}
+    {% include 'django_newsletter/dynamic_blocks/messages.html' with messages=messages %}
+
     <div class="d-flex flex-column height-screen-height mb-4">
         <!-- Navbar -->
-        {% include 'django_newsletter/blocks/navbar.html' %}
+        {% include 'django_newsletter/static_blocks/navbar.html' %}
         <!-- Main banner -->
-        {% include 'django_newsletter/blocks/main_banner.html' %}
+        {% include 'django_newsletter/static_blocks/main_banner.html' %}
     </div>
 
     <!-- Did you know -->
-    {% include 'django_newsletter/blocks/did_you_know.html' %}
+    {% include 'django_newsletter/static_blocks/did_you_know.html' %}
 
     <!-- Features -->
-    {% include 'django_newsletter/blocks/features.html'%}
+    {% include 'django_newsletter/static_blocks/features.html' %}
 
     <!-- Form -->
-    {% include 'django_newsletter/blocks/join_form.html' with form=form %}
+    {% include 'django_newsletter/dynamic_blocks/join_form.html' with form=form %}
+
+    <!-- Footer -->
+    {% include 'django_newsletter/static_blocks/footer.html' %}
+
+    <script>
+        (function setProperUrlAnchor(){
+            const shouldScrollToNewsletter = document.getElementsByClassName("invalid-feedback")[0] !== undefined
+            if (shouldScrollToNewsletter === true){
+                location.href = "#newsletter";
+                return
+            }
+            // Remove anchors
+            let isAnchorRe = /#.+$/
+            if (location.href.match(isAnchorRe)) location.href = "";
+        })()
+    </script>
 {% endblock %}

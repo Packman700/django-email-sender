@@ -1,9 +1,0 @@
-{% load crispy_forms_filters %}
-<div class="container
-            d-flex flex-column
-            p-3 mx-auto mt-5" id="newsletter">
-    <form method="POST"> {% csrf_token %}
-        {{ form|crispy }}
-        <input type="submit" value="Join newsletter" class="btn btn-success mt-3">
-    </form>
-</div>

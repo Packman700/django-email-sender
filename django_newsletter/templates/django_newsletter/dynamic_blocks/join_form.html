@@ -1,0 +1,20 @@
+{% load crispy_forms_filters %}
+
+<!-- NEWSLETTER SECTION -->
+<div class="container
+            d-flex flex-column
+            p-3 mx-auto mt-5" id="newsletter">
+    <h5 class="display-6 mb-4">Try Newsletter</h5>
+    <div class="row row-cols-1 row-cols-lg-2">
+        <!-- TRY NEWSLETTER INFO-->
+        {% include "django_newsletter/static_blocks/try_newsletter_info.html" %}
+
+        <!-- JOIN NEWSLETTER FORM -->
+        <div class="col px-lg-5">
+            <form method="POST"> {% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" value="Join newsletter" class="btn btn-success mt-3">
+            </form>
+        </div>
+    </div>
+</div>
