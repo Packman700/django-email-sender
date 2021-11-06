@@ -8,6 +8,7 @@ from django_newsletter.models.member import Member
 
 
 class JoinNewsletter(FormView):
+    """This template is main page hold join newsletter logic"""
     template_name = f"{__package__}/views/join_newsletter.html"
     form_class = JoinNewsletterForm
     success_url = reverse_lazy("newsletter:join-newsletter")
