@@ -14,9 +14,9 @@ def delete_not_confirmed_members_schedule(name="Delete not confirmed members",
     Schedule.objects.create(func=func, name=name, schedule_type=Schedule.DAILY)
 
 
-def schedule_mail_message(id_, method, date,
-                          func=f"{__package__}.models.email_message.EmailMessage.send_mail_to_all_members"):
-    """Schedule send email"""
+def schedule_mail_message_to_date(id_, method, date,
+                                  func=f"{__package__}.models.email_message.EmailMessageToDate.send_mail_to_all_members"):
+    """Schedule mail to datesend email"""
     if not isinstance(id_, int):
         raise IdIsNotTypeIntError
     if method not in ["DELETE", "INSERT", "UPDATE"]:
@@ -31,3 +31,10 @@ def schedule_mail_message(id_, method, date,
         Schedule.objects.create(func=func, kwargs={'id_': id_},
                                 name=name, schedule_type=Schedule.ONCE,
                                 next_run=date)
+
+# For test mails
+# def schedule_cron_test_mail_group_1(name="Test daily cron mail (group 1)",
+#                                     func=f"{__package__}.models.email_message.EmailMessage.send_mail_to_all_members"):
+#     Schedule.objects.create(func=func, kwargs={'id_': id_},
+#                             name=name, schedule_type=Schedule.ONCE,
+#                             next_run=date)

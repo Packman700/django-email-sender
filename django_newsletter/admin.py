@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from django_newsletter.models.access_lists import BlackList, WhiteList
-from django_newsletter.models.email_message import EmailMessage
+from django_newsletter.models.email_message import EmailMessageToDate
 from django_newsletter.models.member import Member
 
 admin.site.register(Member)
@@ -10,7 +10,7 @@ admin.site.register(WhiteList)
 
 
 class EmailMessageAdmin(admin.ModelAdmin):
-    model = EmailMessage
+    model = EmailMessageToDate
 
     def delete_queryset(self, request, queryset):
         """ Overwrite default delete method """
@@ -18,4 +18,4 @@ class EmailMessageAdmin(admin.ModelAdmin):
             obj.delete()
 
 
-admin.site.register(EmailMessage, EmailMessageAdmin)
+admin.site.register(EmailMessageToDate, EmailMessageAdmin)
