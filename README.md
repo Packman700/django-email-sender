@@ -3,6 +3,8 @@
 2. pip install -r requirements.txt
 3. Add these settings to project settings
 ``` Py
+SECRET_KEY = environ.get('SECRET_KEY') # Add secret key to environment variables
+
 INSTALLED_APPS = [
     ...,
     'django_newsletter',  # Main app
@@ -60,10 +62,10 @@ ADMIN_REORDER = (
    HOST_DOMAIN = 'Your_domain'
     ```
 8. Adjust app preferences to your needs (look bellow)
-9. manage.py makemigrations
-10.manage.py migrate
-10. manage.py qcluster  **Must always run in background**
-11. manage.py runserver 
+9. python manage.py makemigrations
+10. python manage.py migrate
+11. python manage.py qcluster  **Must always run in background**
+12. python manage.py runserver 
 
 Now you can add new mails to newsletter using admin view
 
