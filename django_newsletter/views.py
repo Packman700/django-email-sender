@@ -21,7 +21,7 @@ class JoinNewsletter(FormView):
     def set_message(self, obj):
         if obj.confirmed:
             return messages.success(self.request, "Welcome in newsletter <3")
-        return messages.info(self.request, f"Almost done. Check {obj.email} and confirm join to newsletter")
+        return messages.info(self.request, f"Almost done. Check <strong>{obj.email}</strong> and confirm join to newsletter")
 
 
 def confirm_join_to_newsletter(request, uuid):

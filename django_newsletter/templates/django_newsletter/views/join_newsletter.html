@@ -16,8 +16,18 @@
     <!-- Features -->
     {% include 'django_newsletter/static_blocks/features.html' %}
 
-    <!-- Form -->
-    {% include 'django_newsletter/dynamic_blocks/join_form.html' with form=form %}
+    <div class="container
+            d-flex flex-column
+            p-3 mx-auto m-5" id="newsletter">
+        <h5 class="display-6 mb-4">Try Newsletter</h5>
+        <div class="row row-cols-1 row-cols-lg-2">
+            <!-- TRY NEWSLETTER INFO-->
+            {% include "django_newsletter/static_blocks/try_newsletter_info.html" %}
+
+            <!-- Form -->
+            {% include 'django_newsletter/dynamic_blocks/join_form.html' with form=form %}
+        </div>
+    </div>
 
     <!-- Footer -->
     {% include 'django_newsletter/static_blocks/footer.html' %}
@@ -26,12 +36,12 @@
         (function setProperUrlAnchor(){
             const shouldScrollToNewsletter = document.getElementsByClassName("invalid-feedback")[0] !== undefined
             if (shouldScrollToNewsletter === true){
-                location.href = "#newsletter";
+                window.history.pushState(NaN, NaN, "#newsletter");
                 return
             }
             // Remove anchors
             let isAnchorRe = /#.+$/
-            if (location.href.match(isAnchorRe)) location.href = "";
+            if (location.href.match(isAnchorRe)) window.history.pushState(NaN, NaN, "#");
         })()
     </script>
 {% endblock %}
