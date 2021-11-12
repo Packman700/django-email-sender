@@ -5,7 +5,7 @@ from django.db import models
 from django_newsletter.mail_factory import default_mail
 from django_newsletter.models.member import Member
 
-# from datetime import datetime, timedelta
+from datetime import datetime, timedelta
 
 
 class EmailMessageAbstract(models.Model):
@@ -22,14 +22,13 @@ class EmailMessageAbstract(models.Model):
     def send_mail_to_all_members(cls, id_, members=None):
         """Sending mail to all members"""
         if members is None:
-            members_objects = Member.objects.filter(confirmed=True)
-        else:
-            members_objects = members
+            members = Member.objects.filter(confirmed=True)
+        # TODO ADD LOGIC TO TAKE ALSO NOT CONFIRMED USERS
 
         mail = cls.objects.filter(id=id_).first()
 
         sender_email = settings.EMAIL_HOST_USER
-        members_mails = [member.email for member in members_objects]
+        members_mails = [member.email for member in members]
         email_content = default_mail(mail.content)
 
         send_mail(mail.title, "", sender_email, members_mails, html_message=email_content)
@@ -55,23 +54,24 @@ class EmailMessageCron(EmailMessageAbstract):
     cron = models.CharField(max_length=30)
 
 
-# class EmailMessageMembershipTime(EmailMessageAbstract):
-#     """Send mail according to time left from join"""
-#     class Meta:
-#         class_name = "EmailMessageMembershipTime"
-#         schedule_function_name = "schedule_mail_message_membership_time"
-#
-#     days_from_join = models.IntegerField(blank=True, default=0, help_text="Number of days spend from join to send this message")
-#     date = models.DateField(auto_now_add=True, blank=True)
-#
-#     @classmethod
-#     def send_mail_to_all_members(cls, id_, members=None, **kwargs):
-#         """Sending mail to all members"""
-#         mail = cls.objects.get(id=id_)
-#         mail.date
-#         now = datetime.now()
-#         days = datetime(day=kwargs['days'])
-#
-#         members = Member
-#
-#         super(EmailMessageToDate).send_mail_to_all_members(id_, members)
+### MEMBERSHIP TIME EMAIL ###
+class EmailMessageMembershipTime(EmailMessageAbstract):
+    """Send mail according to time left from join"""
+
+    days_from_join = models.IntegerField(blank=True, default=0,
+                                         help_text="Number of days spend from join to send this message")
+
+    @classmethod
+    def send_mail_to_all_members(cls, id_, members=None):
+        """Sending mail to members"""
+        mail = cls.objects.get(id=id_)
+        time_to_add = timedelta(days=mail.days_from_join)
+        today = datetime.now().date()
+        expected_account_create_date = today - time_to_add
+
+        members = Member.objects.filter(join_datetime__year=expected_account_create_date.year,
+                                        join_datetime__month=expected_account_create_date.month,
+                                        join_datetime__day=expected_account_create_date.day)
+
+        if members:
+            super().send_mail_to_all_members(id_, members)

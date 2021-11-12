@@ -1,8 +1,7 @@
 from django.contrib import admin
 
 from django_newsletter.models.access_lists import BlackList, WhiteList
-from django_newsletter.models.email_message import EmailMessageToDate, EmailMessageCron #,EmailMessageMembershipTime
-
+from django_newsletter.models.email_message import (EmailMessageToDate, EmailMessageCron, EmailMessageMembershipTime)
 from django_newsletter.models.member import Member
 
 admin.site.register(Member)
@@ -17,18 +16,6 @@ class ModelAdminModifiedDelete(admin.ModelAdmin):
             obj.delete()
 
 
-class EmailMessageToDateAdmin(ModelAdminModifiedDelete):
-    model = EmailMessageToDate
-
-
-class EmailMessageCronAdmin(ModelAdminModifiedDelete):
-    model = EmailMessageCron
-
-
-# class EmailMessageMembershipTimeAdmin(ModelAdminModifiedDelete):
-#     model = EmailMessageMembershipTime
-
-
-admin.site.register(EmailMessageToDate, EmailMessageToDateAdmin)
-admin.site.register(EmailMessageCron, EmailMessageCronAdmin)
-# admin.site.register(EmailMessageMembershipTime, EmailMessageMembershipTimeAdmin)
+admin.site.register(EmailMessageToDate, ModelAdminModifiedDelete)
+admin.site.register(EmailMessageCron, ModelAdminModifiedDelete)
+admin.site.register(EmailMessageMembershipTime, ModelAdminModifiedDelete)
