@@ -85,7 +85,8 @@ def add_admin_reorder():
         {
             'app': __package__,
             'label': 'newsletter',
-            'models': (f'{__package__}.EmailMessage',
+            'models': (f'{__package__}.EmailMessageToDate',
+                       f'{__package__}.EmailMessageCron',
                        f'{__package__}.Member')
         }
     )

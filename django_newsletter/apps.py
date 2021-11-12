@@ -12,5 +12,5 @@ class DjangoNewsletterConfig(AppConfig):
     def ready(self):
         set_settings()
         if 'runserver' in sys.argv:
-            from .schedule import delete_not_confirmed_members_schedule
-            delete_not_confirmed_members_schedule()
+            from .schedule import schedule_delete_not_confirmed_members
+            schedule_delete_not_confirmed_members()
