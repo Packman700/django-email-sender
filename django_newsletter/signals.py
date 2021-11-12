@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save, pre_delete
 from django_newsletter.schedule import (schedule_mail_message_to_date, schedule_mail_message_cron)
-from models.email_message import EmailMessageToDate, EmailMessageCron
+from .models.email_message import EmailMessageToDate, EmailMessageCron
 
 
 def mail_post_save(sender, instance, **kwargs):
@@ -17,7 +17,8 @@ def mail_pre_delete(sender, instance, **kwargs):
         schedule_mail_message_to_date(instance, "DELETE")
 
 
-MODELS = [EmailMessageToDate, EmailMessageCron]
-for model in MODELS:
-    post_save.connect(mail_post_save, sender=model)
-    pre_delete.connect(mail_post_save, sender=model)
+def init_signals():
+    models = [EmailMessageToDate, EmailMessageCron]
+    for model in models:
+        post_save.connect(mail_post_save, sender=model)
+        pre_delete.connect(mail_pre_delete, sender=model)
