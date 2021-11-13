@@ -47,7 +47,7 @@ def schedule_mail_message_cron(mail, method,
 
     if method == "SAVE":
         Schedule.objects.create(func=func, kwargs={'id_': mail.id},
-                                name=name, schedule_type=Schedule.cron,
+                                name=name, schedule_type="C",
                                 cron=mail.cron)
 
 
@@ -62,5 +62,5 @@ def schedule_mail_message_membership_time(mail, method,
 
     if method == "SAVE":
         Schedule.objects.create(func=func, kwargs={'id_': mail.id},
-                                name=name, schedule_type=Schedule.cron,
+                                name=name, schedule_type="C",
                                 cron="0 6 * * *")  # Run every day in 6 AM
