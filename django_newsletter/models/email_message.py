@@ -12,20 +12,32 @@ class EmailMessageAbstract(models.Model):
     class Meta:
         abstract = True
 
-    title = models.CharField(max_length=100)
+    database_title = models.CharField(max_length=100, blank=True,
+                                      help_text="This title is mail representation in database "
+                                                "leave blank if database title should be taken from title")
+    title = models.CharField(max_length=100, help_text="This is mail title")
     content = models.TextField()
+    send_to_confirmed = models.BooleanField(default=True)
+    send_to_not_confirmed = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.id} {self.title}"
+        return f"{self.id} {self.database_title}"
 
     @classmethod
     def send_mail_to_all_members(cls, id_, members=None):
         """Sending mail to all members"""
-        if members is None:
-            members = Member.objects.filter(confirmed=True)
-        # TODO ADD LOGIC TO TAKE ALSO NOT CONFIRMED USERS
-
         mail = cls.objects.filter(id=id_).first()
+
+        if members is None:
+            members = Member.objects.all()
+
+        # Send mail to confirmed or not confirmed users
+        if not mail.send_to_confirmed:
+            members = members.exclude(confirmed=True)
+        if not mail.send_to_not_confirmed:
+            members = members.exclude(confirmed=False)
+        if not members:
+            return
 
         sender_email = settings.EMAIL_HOST_USER
         members_mails = [member.email for member in members]
@@ -63,7 +75,7 @@ class EmailMessageMembershipTime(EmailMessageAbstract):
 
     @classmethod
     def send_mail_to_all_members(cls, id_, members=None):
-        """Sending mail to members"""
+        """Sending mail to members with """
         mail = cls.objects.get(id=id_)
         time_to_add = timedelta(days=mail.days_from_join)
         today = datetime.now().date()
