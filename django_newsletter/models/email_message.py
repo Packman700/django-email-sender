@@ -1,71 +1,89 @@
-import sys
-
-import django.db.models.options as options
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db import models
 
-import django_newsletter.schedule as schedule
 from django_newsletter.mail_factory import default_mail
 from django_newsletter.models.member import Member
 
-options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('class_name', 'schedule_function_name')
+from datetime import datetime, timedelta
 
 
 class EmailMessageAbstract(models.Model):
     class Meta:
         abstract = True
-        class_name = "EmailMessageAbstract"
-        schedule_function_name = "schedule_abstract_mail_message"
 
-    title = models.CharField(max_length=100)
+    database_title = models.CharField(max_length=100, blank=True,
+                                      help_text="This title is mail representation in database "
+                                                "leave blank if database title should be taken from title")
+    title = models.CharField(max_length=100, help_text="This is mail title")
     content = models.TextField()
+    send_to_confirmed = models.BooleanField(default=True)
+    send_to_not_confirmed = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.id} {self.title}"
-
-    # Add abstraction to this
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        class_instance = self.__get_class_instance()
-        schedule_function_name = self._meta.schedule_function_name
-
-        if getattr(class_instance, "objects").filter(id=self.id):
-            getattr(schedule, schedule_function_name)(self.pk, 'UPDATE', self.send_time)
-        else:
-            getattr(schedule, schedule_function_name)(self.pk, 'INSERT', self.send_time)
-
-    def delete(self, *args, **kwargs):
-        schedule_function_name = self._meta.schedule_function_name
-        getattr(schedule, schedule_function_name)(self.pk, 'DELETE', self.send_time)
-        super().delete(*args, **kwargs)
-
-    def __get_class_instance(self):
-        return getattr(sys.modules[__name__], self._meta.class_name)
-
-
-class EmailMessageToDate(EmailMessageAbstract):
-    class Meta:
-        class_name = "EmailMessageToDate"
-        schedule_function_name = "schedule_mail_message_to_date"
-
-    send_time = models.DateTimeField()
-    is_send = models.BooleanField(default=False)
+        return f"{self.id} {self.database_title}"
 
     @classmethod
-    def send_mail_to_all_members(cls, id_):
+    def send_mail_to_all_members(cls, id_, members=None):
         """Sending mail to all members"""
-        members_objects = Member.objects.filter(confirmed=True)
+        mail = cls.objects.filter(id=id_).first()
 
-        mail = cls.objects.filter(id=id_)
-        mail.update(is_send=True)
-        mail = mail.first()
+        if members is None:
+            members = Member.objects.all()
+
+        # Send mail to confirmed or not confirmed users
+        if not mail.send_to_confirmed:
+            members = members.exclude(confirmed=True)
+        if not mail.send_to_not_confirmed:
+            members = members.exclude(confirmed=False)
+        if not members:
+            return
 
         sender_email = settings.EMAIL_HOST_USER
-        members_mails = [member.email for member in members_objects]
+        members_mails = [member.email for member in members]
         email_content = default_mail(mail.content)
 
         send_mail(mail.title, "", sender_email, members_mails, html_message=email_content)
 
-# class EmailMessageCron(EmailMessage):
+
+### DATE EMAIL ###
+class EmailMessageToDate(EmailMessageAbstract):
+    send_time = models.DateTimeField()
+    is_send = models.BooleanField(default=False)
+
+    @classmethod
+    def send_mail_to_all_members(cls, id_, members=None):
+        """Sending mail to all members"""
+        super().send_mail_to_all_members(id_)
+
+        mail = cls.objects.filter(id=id_)
+        mail.update(is_send=True)
+
+
+### CRON EMAIL ###
+class EmailMessageCron(EmailMessageAbstract):
+    # TODO Add cron validator
+    cron = models.CharField(max_length=30)
+
+
+### MEMBERSHIP TIME EMAIL ###
+class EmailMessageMembershipTime(EmailMessageAbstract):
+    """Send mail according to time left from join"""
+
+    days_from_join = models.IntegerField(blank=True, default=0,
+                                         help_text="Number of days spend from join to send this message")
+
+    @classmethod
+    def send_mail_to_all_members(cls, id_, members=None):
+        """Sending mail to members with """
+        mail = cls.objects.get(id=id_)
+        time_to_add = timedelta(days=mail.days_from_join)
+        today = datetime.now().date()
+        expected_account_create_date = today - time_to_add
+
+        members = Member.objects.filter(join_datetime__year=expected_account_create_date.year,
+                                        join_datetime__month=expected_account_create_date.month,
+                                        join_datetime__day=expected_account_create_date.day)
+
+        if members:
+            super().send_mail_to_all_members(id_, members)

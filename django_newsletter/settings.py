@@ -68,7 +68,7 @@ def add_apps():
         'django_q',  # For schedule model tasks
     ]
 
-    # settings.INSTALLED_APPS.append('django_q')
+    settings.INSTALLED_APPS.append('django_q')
     for app_name in REQUIRED_APPLICATIONS:
         if app_name not in settings.INSTALLED_APPS:
             settings.INSTALLED_APPS += app_name
@@ -85,7 +85,9 @@ def add_admin_reorder():
         {
             'app': __package__,
             'label': 'newsletter',
-            'models': (f'{__package__}.EmailMessage',
+            'models': (f'{__package__}.EmailMessageToDate',
+                       f'{__package__}.EmailMessageCron',
+                       f'{__package__}.EmailMessageMembershipTime',
                        f'{__package__}.Member')
         }
     )

@@ -5,7 +5,14 @@ from django_newsletter.exceptions import (IdIsNotTypeIntError,
                                           InvalidMethodValueError)
 
 
-def delete_not_confirmed_members_schedule(name="Delete not confirmed members",
+def validate_mail_schedule_input(id_, method):
+    if not isinstance(id_, int):
+        raise IdIsNotTypeIntError
+    if method not in ["DELETE", "SAVE"]:
+        raise InvalidMethodValueError
+
+
+def schedule_delete_not_confirmed_members(name="Delete not confirmed members",
                                           func=f'{__package__}.models.member.Member.delete_not_confirm_members'):
     """Schedule deletion not confirmed members"""
     if obj := Schedule.objects.filter(func=func, name=name):
@@ -14,27 +21,46 @@ def delete_not_confirmed_members_schedule(name="Delete not confirmed members",
     Schedule.objects.create(func=func, name=name, schedule_type=Schedule.DAILY)
 
 
-def schedule_mail_message_to_date(id_, method, date,
+def schedule_mail_message_to_date(mail, method,
                                   func=f"{__package__}.models.email_message.EmailMessageToDate.send_mail_to_all_members"):
-    """Schedule mail to datesend email"""
-    if not isinstance(id_, int):
-        raise IdIsNotTypeIntError
-    if method not in ["DELETE", "INSERT", "UPDATE"]:
-        raise InvalidMethodValueError
-
-    name = f"Send mail {id_}"
+    """Schedule mail send to specific date"""
+    validate_mail_schedule_input(mail.id, method)
+    name = f"Send (date) mail {mail.id}"
 
     if obj := Schedule.objects.filter(func=func, name=name):
         obj.delete()
 
-    if method in ["INSERT", "UPDATE"]:
-        Schedule.objects.create(func=func, kwargs={'id_': id_},
+    if method == "SAVE":
+        Schedule.objects.create(func=func, kwargs={'id_': mail.id},
                                 name=name, schedule_type=Schedule.ONCE,
-                                next_run=date)
+                                next_run=mail.send_time)
 
-# For test mails
-# def schedule_cron_test_mail_group_1(name="Test daily cron mail (group 1)",
-#                                     func=f"{__package__}.models.email_message.EmailMessage.send_mail_to_all_members"):
-#     Schedule.objects.create(func=func, kwargs={'id_': id_},
-#                             name=name, schedule_type=Schedule.ONCE,
-#                             next_run=date)
+
+def schedule_mail_message_cron(mail, method,
+                               func=f"{__package__}.models.email_message.EmailMessageCron.send_mail_to_all_members"):
+    """Schedule mail send according to cron expression"""
+    validate_mail_schedule_input(mail.id, method)
+    name = f"Send (cron) mail {mail.id}"
+
+    if obj := Schedule.objects.filter(func=func, name=name):
+        obj.delete()
+
+    if method == "SAVE":
+        Schedule.objects.create(func=func, kwargs={'id_': mail.id},
+                                name=name, schedule_type=Schedule.cron,
+                                cron=mail.cron)
+
+
+def schedule_mail_message_membership_time(mail, method,
+                                          func=f"{__package__}.models.email_message.EmailMessageMembershipTime.send_mail_to_all_members"):
+    """Schedule mail send according to time spend from join"""
+    validate_mail_schedule_input(mail.id, method)
+    name = f"Send (membership time) mail {mail.id}"
+
+    if obj := Schedule.objects.filter(func=func, name=name):
+        obj.delete()
+
+    if method == "SAVE":
+        Schedule.objects.create(func=func, kwargs={'id_': mail.id},
+                                name=name, schedule_type=Schedule.cron,
+                                cron="0 6 * * *")  # Run every day in 6 AM

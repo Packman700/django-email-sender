@@ -26,11 +26,7 @@ class Member(models.Model):
                                      join_datetime__lte=datetime.now() - timedelta(days=countdown_days))
         objects.delete()
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        self.__send_welcome_mail()
-
-    def __send_welcome_mail(self):
+    def send_welcome_mail(self):
         title = settings.WELCOME_MAIL_TITLE
         sender_email = settings.EMAIL_HOST_USER
         recipient_email = self.email
