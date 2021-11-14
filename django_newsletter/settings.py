@@ -25,7 +25,7 @@ def set_settings():
         "HOST_DOMAIN": "127.0.0.1:8000",
 
         "NEED_CONFIRM_JOIN_TO_NEWSLETTER": True,
-        "AFTER_HOW_MANY_DAYS_DELETE_USER": 1,
+        "AFTER_HOW_MANY_DAYS_DELETE_USER": 10,
 
         "ENABLE_WHITE_LIST": False,
         "ENABLE_BACK_LIST": False,

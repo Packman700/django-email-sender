@@ -11,7 +11,7 @@ class Member(models.Model):
     email = models.EmailField(unique=True)
     confirmed = models.BooleanField(default=False)
     username = models.CharField(max_length=50)
-    join_datetime = models.DateTimeField(default=datetime.now)
+    join_datetime = models.DateField(default=datetime.now)
 
     def __str__(self):
         return f"{self.id} {self.email}"
@@ -23,6 +23,16 @@ class Member(models.Model):
         """
         countdown_days = settings.AFTER_HOW_MANY_DAYS_DELETE_USER
         objects = cls.objects.filter(confirmed=False,
+                                     join_datetime__lte=datetime.now() - timedelta(days=countdown_days))
+        objects.delete()
+
+    @classmethod
+    def delete_confirm_members(cls):
+        """Function delete all not confirmed accounts
+        after two days email no confirmation
+        """
+        countdown_days = 2
+        objects = cls.objects.filter(confirmed=True,
                                      join_datetime__lte=datetime.now() - timedelta(days=countdown_days))
         objects.delete()
 

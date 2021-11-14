@@ -3,6 +3,7 @@
 from django_q.tasks import Schedule
 from django_newsletter.exceptions import (IdIsNotTypeIntError,
                                           InvalidMethodValueError)
+from datetime import datetime
 
 
 def validate_mail_schedule_input(id_, method):
@@ -18,7 +19,16 @@ def schedule_delete_not_confirmed_members(name="Delete not confirmed members",
     if obj := Schedule.objects.filter(func=func, name=name):
         obj.delete()
 
-    Schedule.objects.create(func=func, name=name, schedule_type=Schedule.DAILY)
+    Schedule.objects.create(func=func, name=name, schedule_type="C", cron="0 0 * * *", next_run=datetime.now())
+
+
+def schedule_delete_confirmed_members(name="Delete not confirmed members",
+                                      func=f'{__package__}.models.member.Member.delete_confirm_members'):
+    """Schedule deletion not confirmed members"""
+    if obj := Schedule.objects.filter(func=func, name=name):
+        obj.delete()
+
+    Schedule.objects.create(func=func, name=name, schedule_type="C", cron="0 0 * * *", next_run=datetime.now())
 
 
 def schedule_mail_message_to_date(mail, method,
@@ -32,7 +42,7 @@ def schedule_mail_message_to_date(mail, method,
 
     if method == "SAVE":
         Schedule.objects.create(func=func, kwargs={'id_': mail.id},
-                                name=name, schedule_type=Schedule.ONCE,
+                                name=name, schedule_type="O",
                                 next_run=mail.send_time)
 
 
