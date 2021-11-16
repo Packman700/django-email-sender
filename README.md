@@ -1,3 +1,6 @@
+[![Build](https://github.com/Packman700/django-newsletter/actions/workflows/build.yml/badge.svg)](https://github.com/Packman700/django-newsletter/actions/workflows/build.yml)
+[![Build and release](https://github.com/Packman700/django-newsletter/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/Packman700/django-newsletter/actions/workflows/build-and-release.yml)
+# Live demo
 https://my-django-newsletter.herokuapp.com/
 # Setup
 1. Copy django_newsletter and requirements.txt to your django project root
