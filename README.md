@@ -1,5 +1,4 @@
-[![Build](https://github.com/Packman700/django-newsletter/actions/workflows/build.yml/badge.svg)](https://github.com/Packman700/django-newsletter/actions/workflows/build.yml)
-[![Build and release](https://github.com/Packman700/django-newsletter/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/Packman700/django-newsletter/actions/workflows/build-and-release.yml)
+[![Build and release](https://github.com/Packman700/django-newsletter/actions/workflows/build-and-release.yml/badge.svg?branch=main)](https://github.com/Packman700/django-newsletter/actions/workflows/build-and-release.yml)
 # Live demo
 https://my-django-newsletter.herokuapp.com/
 # Setup
