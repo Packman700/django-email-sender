@@ -14,8 +14,7 @@ class DjangoNewsletterConfig(AppConfig):
         if 'migrate' in sys.argv or 'makemigrations' in sys.argv or 'collectstatic' in sys.argv:
             return
 
-        from .schedule import schedule_delete_not_confirmed_members, schedule_delete_confirmed_members
+        from .schedules import init_schedules
         from .signals import init_signals
-        schedule_delete_not_confirmed_members()
-        schedule_delete_confirmed_members()
+        init_schedules()
         init_signals()

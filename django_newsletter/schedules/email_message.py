@@ -1,11 +1,11 @@
-""" File store all schedule create functions """
-
 from django_q.tasks import Schedule
 from django_newsletter.exceptions import (IdIsNotTypeIntError,
                                           InvalidMethodValueError)
-from datetime import datetime
 
 
+ROOT_PACKAGE = __package__.split(".")[0]
+
+### HELPERS ###
 def validate_mail_schedule_input(id_, method):
     if not isinstance(id_, int):
         raise IdIsNotTypeIntError
@@ -13,26 +13,9 @@ def validate_mail_schedule_input(id_, method):
         raise InvalidMethodValueError
 
 
-def schedule_delete_not_confirmed_members(name="Delete not confirmed members",
-                                          func=f'{__package__}.models.member.Member.delete_not_confirm_members'):
-    """Schedule deletion not confirmed members"""
-    if obj := Schedule.objects.filter(func=func, name=name):
-        obj.delete()
-
-    Schedule.objects.create(func=func, name=name, schedule_type="C", cron="0 0 * * *", next_run=datetime.now())
-
-
-def schedule_delete_confirmed_members(name="Delete not confirmed members",
-                                      func=f'{__package__}.models.member.Member.delete_confirm_members'):
-    """Schedule deletion not confirmed members"""
-    if obj := Schedule.objects.filter(func=func, name=name):
-        obj.delete()
-
-    Schedule.objects.create(func=func, name=name, schedule_type="C", cron="0 0 * * *", next_run=datetime.now())
-
-
+### SCHEDULE MAILS ###
 def schedule_mail_message_to_date(mail, method,
-                                  func=f"{__package__}.models.email_message.EmailMessageToDate.send_mail_to_all_members"):
+                                  func=f"{ROOT_PACKAGE}.models.email_message.EmailMessageToDate.send_mail_to_all_members"):
     """Schedule mail send to specific date"""
     validate_mail_schedule_input(mail.id, method)
     name = f"Send (date) mail {mail.id}"
@@ -47,7 +30,7 @@ def schedule_mail_message_to_date(mail, method,
 
 
 def schedule_mail_message_cron(mail, method,
-                               func=f"{__package__}.models.email_message.EmailMessageCron.send_mail_to_all_members"):
+                               func=f"{ROOT_PACKAGE}.models.email_message.EmailMessageCron.send_mail_to_all_members"):
     """Schedule mail send according to cron expression"""
     validate_mail_schedule_input(mail.id, method)
     name = f"Send (cron) mail {mail.id}"
@@ -62,7 +45,7 @@ def schedule_mail_message_cron(mail, method,
 
 
 def schedule_mail_message_membership_time(mail, method,
-                                          func=f"{__package__}.models.email_message.EmailMessageMembershipTime.send_mail_to_all_members"):
+                                          func=f"{ROOT_PACKAGE}.models.email_message.EmailMessageMembershipTime.send_mail_to_all_members"):
     """Schedule mail send according to time spend from join"""
     validate_mail_schedule_input(mail.id, method)
     name = f"Send (membership time) mail {mail.id}"

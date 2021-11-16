@@ -1,3 +1,4 @@
+"""Here i modify default Schedule model behavior"""
 from django.dispatch import receiver
 from django_q.tasks import Schedule
 from django.db.models.signals import pre_save

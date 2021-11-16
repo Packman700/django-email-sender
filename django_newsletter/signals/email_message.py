@@ -1,11 +1,11 @@
 from django.db.models.signals import post_save, pre_delete, pre_save
 
-from django_newsletter.schedule import (schedule_mail_message_to_date,
-                                        schedule_mail_message_cron,
-                                        schedule_mail_message_membership_time)
 from django_newsletter.models.email_message import (EmailMessageToDate,
                                                     EmailMessageCron,
                                                     EmailMessageMembershipTime)
+from django_newsletter.schedules.email_message import (schedule_mail_message_to_date,
+                                                       schedule_mail_message_cron,
+                                                       schedule_mail_message_membership_time)
 
 
 def mail_post_save(sender, instance, **kwargs):
