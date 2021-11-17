@@ -1,3 +1,4 @@
+{% load full_url %}
 <h1> Hello {{ object.username }} </h1>
 
 {% block content %}
@@ -5,3 +6,4 @@
 {% endblock %}
 <br>
 <small> Mail is sent automatically please don't reply to them </small>
+<small> If you want leave newsletter click <a href="{% full_url "newsletter:delete-account" object.uuid %}"> this link </a> </small>

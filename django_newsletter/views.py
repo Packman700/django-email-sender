@@ -29,9 +29,19 @@ def confirm_join_to_newsletter(request, uuid):
         obj = Member.objects.get(uuid=uuid)
         obj.confirmed = True
         obj.save()
-
         messages.success(request, "Welcome in newsletter <3")
     except Member.DoesNotExist:
-        messages.error(request, "You type invalid address")
+        messages.error(request, "Account not found")
+
+    return redirect(reverse("newsletter:join-newsletter"))
+
+
+def delete_mail_from_newsletter(request, uuid):
+    try:
+        obj = Member.objects.get(uuid=uuid)
+        obj.delete()
+        messages.success(request, "Your account is deleted successfully <br> I hope you will back soon ;D")
+    except Member.DoesNotExist:
+        messages.error(request, "Account not found")
 
     return redirect(reverse("newsletter:join-newsletter"))
