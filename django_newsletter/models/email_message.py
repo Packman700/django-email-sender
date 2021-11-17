@@ -40,10 +40,10 @@ class EmailMessageAbstract(models.Model):
             return
 
         sender_email = settings.EMAIL_HOST_USER
-        members_mails = [member.email for member in members]
-        email_content = default_mail(mail.content)
 
-        send_mail(mail.title, "", sender_email, members_mails, html_message=email_content)
+        for member in members:
+            email_content = default_mail(mail.content, member)
+            send_mail(mail.title, "", sender_email, [member.email], html_message=email_content)
 
 
 ### DATE EMAIL ###
