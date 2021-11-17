@@ -8,7 +8,7 @@ from datetime import datetime
 
 @receiver(pre_save, sender=Schedule)
 def modify_cron_next_run_time(sender, instance, **kwargs):
-    if instance.schedule_type == "C" and instance.cron:
+    if instance.schedule_type == "C" and instance.cron and instance.pk is None:
         now = datetime.now()
         cron_schedule = instance.cron
         cron = croniter(cron_schedule, now)
