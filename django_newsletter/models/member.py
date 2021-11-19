@@ -1,9 +1,12 @@
 import uuid
-from datetime import datetime, timedelta
-from django.core.mail import send_mail
-from django_newsletter.mail_factory import welcome_mail
+from datetime import timedelta
+
 from django.conf import settings
+from django.core.mail import send_mail
 from django.db import models
+from django.utils import timezone
+
+from django_newsletter.mail_factory import welcome_mail
 
 
 class Member(models.Model):
@@ -11,7 +14,7 @@ class Member(models.Model):
     email = models.EmailField(unique=True)
     confirmed = models.BooleanField(default=False)
     username = models.CharField(max_length=50)
-    join_datetime = models.DateField(default=datetime.now)
+    join_datetime = models.DateField(default=timezone.now)
 
     def __str__(self):
         return f"{self.id} {self.email}"
@@ -23,7 +26,7 @@ class Member(models.Model):
         """
         countdown_days = settings.AFTER_HOW_MANY_DAYS_DELETE_USER
         objects = cls.objects.filter(confirmed=False,
-                                     join_datetime__lte=datetime.now() - timedelta(days=countdown_days))
+                                     join_datetime__lte=timezone.now() - timedelta(days=countdown_days))
         objects.delete()
 
     @classmethod
@@ -33,7 +36,7 @@ class Member(models.Model):
         """
         countdown_days = 2
         objects = cls.objects.filter(confirmed=True,
-                                     join_datetime__lte=datetime.now() - timedelta(days=countdown_days))
+                                     join_datetime__lte=timezone.now() - timedelta(days=countdown_days))
         objects.delete()
 
     def send_welcome_mail(self):

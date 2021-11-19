@@ -1,11 +1,12 @@
+from datetime import timedelta
+
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db import models
+from django.utils import timezone
 
 from django_newsletter.mail_factory import default_mail
 from django_newsletter.models.member import Member
-
-from datetime import datetime, timedelta
 
 
 class EmailMessageAbstract(models.Model):
@@ -78,7 +79,7 @@ class EmailMessageMembershipTime(EmailMessageAbstract):
         """Sending mail to members with """
         mail = cls.objects.get(id=id_)
         time_to_add = timedelta(days=mail.days_from_join)
-        today = datetime.now().date()
+        today = timezone.now().date()
         expected_account_create_date = today - time_to_add
 
         members = Member.objects.filter(join_datetime__year=expected_account_create_date.year,
