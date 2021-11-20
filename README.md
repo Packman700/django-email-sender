@@ -31,6 +31,9 @@ Q_CLUSTER = {
     'bulk': 10,
     'orm': 'default'
 }
+
+RECAPTCHA_PUBLIC_KEY = environ.get('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = environ.get('RECAPTCHA_PRIVATE_KEY')
 ```
 4. *If you use ADMIN_REORDER add this line of code
 ``` Py

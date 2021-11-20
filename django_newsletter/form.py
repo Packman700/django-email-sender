@@ -4,12 +4,14 @@ from django.conf import settings
 from django_newsletter.exceptions import WhiteListValidationError, BlackListValidationError
 from django_newsletter.models.access_lists import WhiteList, BlackList
 from django_newsletter.models.member import Member
+from captcha.fields import ReCaptchaField
 
 
 class JoinNewsletterForm(forms.ModelForm):
     NEED_CONFIRM = settings.NEED_CONFIRM_JOIN_TO_NEWSLETTER
 
     confirmed = forms.BooleanField(widget=forms.HiddenInput, required=False)
+    captcha = ReCaptchaField(required=True)  # By default is delete in constructor
 
     class Meta:
         model = Member
@@ -18,6 +20,11 @@ class JoinNewsletterForm(forms.ModelForm):
             'username',
             'confirmed'
         ]
+
+    def __init__(self, use_recaptcha=False, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not use_recaptcha:
+            del self.fields['captcha']
 
     def clean_confirmed(self):
         self.confirmed = not self.NEED_CONFIRM
@@ -40,3 +47,7 @@ class JoinNewsletterForm(forms.ModelForm):
             )
 
         return email
+
+    # def clean_captcha(self):
+    #     print("CAPTCHA")
+    #     print(self.cleaned_data['captcha'], "TESTTTT")
