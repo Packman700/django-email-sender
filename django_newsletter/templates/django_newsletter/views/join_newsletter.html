@@ -43,5 +43,31 @@
             let isAnchorRe = /#.+$/
             if (location.href.match(isAnchorRe)) window.history.pushState(NaN, NaN, "#");
         })()
+
+    function isValidCaptcha() {
+        if (document.getElementById("div_id_captcha") !== null)
+            return grecaptcha && grecaptcha.getResponse().length !== 0;
+        return true
+    }
+
+    (function showCaptchaError(){
+        const btn = document.querySelector("form [type=submit]")
+        btn.addEventListener("click", (event)=>{
+            const recaptchaDiv = document.querySelector("#div_id_captcha div div")
+            if (!isValidCaptcha()){
+
+                if (document.getElementById("error_recaptcha") === null) {
+                    const p = recaptchaDiv.appendChild(document.createElement("p"))
+                    p.setAttribute("id", "error_recaptcha")
+                    p.setAttribute("class", "my-form-error invalid-feedback")
+                    const strong = p.appendChild(document.createElement("strong"))
+                    strong.innerText = "Check recaptcha first"
+                }
+
+                event.preventDefault()
+            }
+        })
+    })()
+
     </script>
 {% endblock %}

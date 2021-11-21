@@ -5,6 +5,7 @@ from django.contrib import messages
 
 from django_newsletter.form import JoinNewsletterForm
 from django_newsletter.models.member import Member
+from django_newsletter.session import RecaptchaLogicSession
 
 
 class JoinNewsletter(FormView):
@@ -13,7 +14,28 @@ class JoinNewsletter(FormView):
     form_class = JoinNewsletterForm
     success_url = reverse_lazy("newsletter:join-newsletter")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.session = None
+
+    def get_form(self, form_class=None):
+        # Can't set value in __init__ because there self.request don't exist
+        self.session = RecaptchaLogicSession(self.request)
+        use_recaptcha = self.session.use_recaptcha
+        if use_recaptcha:
+            return self.form_class(use_recaptcha=True, **self.get_form_kwargs())
+        return self.form_class(**self.get_form_kwargs())
+
+    def form_invalid(self, form):
+        self.session.invalid_submits_counter += 1
+        return super().form_invalid(form)
+
     def form_valid(self, form):
+        if self.session.use_recaptcha:
+            del self.session.valid_submits_counter
+        del self.session.invalid_submits_counter
+        self.session.valid_submits_counter += 1
+
         obj = form.save()
         self.set_message(obj)
         return super().form_valid(form)
