@@ -21,7 +21,6 @@ class JoinNewsletter(FormView):
     def get_form(self, form_class=None):
         # Can't set value in __init__ because there self.request don't exist
         self.session = RecaptchaLogicSession(self.request)
-        print(F"{self.session.use_recaptcha=}\n{self.session.valid_submits_counter=}\n{self.session.invalid_submits_counter=}")
         use_recaptcha = self.session.use_recaptcha
         if use_recaptcha:
             return self.form_class(use_recaptcha=True, **self.get_form_kwargs())
